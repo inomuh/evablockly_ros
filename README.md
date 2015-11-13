@@ -1,3 +1,6 @@
+
+download the repository and open "demos/fixed/index.html"
+
 # Blockly
 
 Google's Blockly is a web-based, visual programming editor.  Users can drag
