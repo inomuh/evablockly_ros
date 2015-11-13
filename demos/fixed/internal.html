@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blockly Demo: Generating JavaScript</title>
+  <script src="../../blockly_compressed.js"></script>
+  <script src="../../blocks_compressed.js"></script>
+  <script src="../../javascript_compressed.js"></script>
+  <script src="../../msg/js/en.js"></script>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+</head>
+<body>
+
+<p id="p1">Result will be showed here!!!</p>
+
+  <p>
+    <button onclick="showCode()">Show JavaScript</button>
+    <button onclick="runCode()">Run JavaScript</button>
+  </p>
+  
+
+  <div id="blocklyDiv" style="display:inline-block; height: 480px; width: 400px;"></div>
+					<div style="display:inline-block;">
+							<canvas id="canvas" style="width:300px; height:400px; border:1px solid #efefef; margin-left:20px;"></canvas> 
+							<div class="s-12 l-12" id="gallery" style="margin-top:1%; margin-left:4%;">
+								Ayni zamanda sistemimizi yukaridaki gibi klavye üzerinden 
+								yön tuşlariyla kontrol edebileceksiniz!!
+							</div> 
+						</div>
+
+  <xml id="toolbox" style="display: none">
+    <category name="Logic">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+    </category>
+    <category name="Loops">
+      <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <block type="math_number">
+            <field name="NUM">10</field>
+          </block>
+        </value>
+      </block>
+      <block type="controls_whileUntil"></block>
+    </category>
+    <category name="Math">
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
+      <block type="math_single"></block>
+    </category>
+    <category name="Text">
+      <block type="text"></block>
+      <block type="text_length"></block>
+      <block type="text_print"></block>
+    </category>
+  </xml>
+
+  
+  
+							
+
+<script>
+	window.alert = function (message) {
+       document.getElementById("p1").innerHTML = message;
+       msg_from_blockly=message;
+    };
+
+	
+	var msg_from_blockly="";
+var canvas = document.getElementById("canvas"),
+    ctx = canvas.getContext("2d");
+	canvas.width = canvas.height = 400;
+
+var x = 200,
+    y = 200,
+    velY = 0,
+    velX = 0,
+    speed = 1,
+    friction = 0.8,
+    keys = [];
+
+function update() {
+	
+	if(msg_from_blockly=="yukarı")
+	{
+		msg_from_blockly="";
+		if (velY > -speed) {
+            velY--;
+        }
+	}
+	if(msg_from_blockly=="aşağı")
+	{
+		msg_from_blockly="";
+		if (velY < speed) {
+            velY++;
+        }
+	}
+	if(msg_from_blockly=="sağ")
+	{
+		msg_from_blockly="";
+		 if (velX < speed) {
+            velX++;
+        }
+	}
+	if(msg_from_blockly=="sol")
+	{
+		msg_from_blockly="";
+		if (velX > -speed) {
+            velX--;
+        }
+	}
+
+	//yukarı
+    if (keys[38]) {
+        if (velY > -speed) {
+            velY--;
+        }
+    }
+    
+    //aşağı
+    if (keys[40]) {
+        if (velY < speed) {
+            velY++;
+        }
+    }
+    
+    //sağ
+    if (keys[39]) {
+        if (velX < speed) {
+            velX++;
+        }
+    }
+    
+    //sol
+    if (keys[37]) {
+        if (velX > -speed) {
+            velX--;
+        }
+    }
+
+    velY *= friction;
+    y += velY;
+    velX *= friction;
+    x += velX;
+
+    if (x >= 395) {
+        x = 395;
+    } else if (x <= 5) {
+        x = 5;
+    }
+
+    if (y > 395) {
+        y = 395;
+    } else if (y <= 5) {
+        y = 5;
+    }
+
+    ctx.clearRect(0, 0, 400, 400)
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    setTimeout(update, 10);
+}
+
+update();
+
+document.body.addEventListener("keydown", function (e) {
+    keys[e.keyCode] = true;
+});
+document.body.addEventListener("keyup", function (e) {
+    keys[e.keyCode] = false;
+});
+
+    var workspace = Blockly.inject('blocklyDiv',
+        {media: '../../media/',
+         toolbox: document.getElementById('toolbox')});
+    Blockly.Xml.domToWorkspace(workspace,
+        document.getElementById('startBlocks'));
+
+    function showCode() {
+      // Generate JavaScript code and display it.
+      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      alert(code);
+    }
+
+    function runCode() {
+      // Generate JavaScript code and run it.
+      window.LoopTrap = 1000;
+      Blockly.JavaScript.INFINITE_LOOP_TRAP =
+          'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+      try {
+        eval(code);
+      } catch (e) {
+        alert(e);
+      }
+    }
+    
+
+
+
+  </script>
+
+</body>
+</html>
