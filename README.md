@@ -1,6 +1,3 @@
-
-download the repository and open "demos/fixed/index.html"
-
 you can visit http://wiki.ros.org/evablockly_ros for more information about evablockly_ros
 
 '''Steps to run evablockly_ros'''
